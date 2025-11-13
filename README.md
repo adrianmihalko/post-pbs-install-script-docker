@@ -10,7 +10,7 @@ Running this script on a standard, bare-metal Proxmox VE (PVE) or a standard PBS
 
 ## Overview
 
-This is a minimal, non-interactive utility script for **Proxmox Backup Server (PBS) 4.x (Trixie)**. It performs two primary tasks:
+This is a minimal, non-interactive utility script for **Proxmox Backup Server (PBS) 4.x (Trixie)**. It performs two primary tasks to make PBS usable in a lab or non-production environment without a subscription.
 
 1.  **Disables the Enterprise Repository:** It finds and disables the `pbs-enterprise.sources` file. This prevents the `apt update` command from failing with "401 Unauthorized" errors.
 2.  **Removes the Subscription Nag:** It patches the `proxmoxlib.js` file to permanently remove the "No valid subscription" pop-up nag screen from the web interface.
@@ -23,25 +23,35 @@ This script was created to provide a minimal, non-interactive alternative that s
 
 ## How to Use
 
-1.  Download the script to your PBS server:
+1.  **Find and enter your PBS Docker container:**
     ```bash
+    # Find your container ID or name
+    docker ps
+    
+    # Enter the container's shell (replace <container_id_or_name>)
+    docker exec -it <container_id_or_name> bash
+    ```
+
+2.  **Download the script:**
+    ```bash
+    # (Inside the container)
+    # Note: Replace the URL with your actual GitHub repo URL
     wget [https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME/raw/main/pbs_post_install_script_for_docker.sh](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME/raw/main/pbs_post_install_script_for_docker.sh)
     ```
-    *(Note: Replace the URL above after you upload the script to your own GitHub repo.)*
 
-2.  Make the script executable:
+3.  **Run it:**
     ```bash
+    # (Inside the container)
     chmod +x pbs_post_install_script_for_docker.sh
-    ```
-
-3.  Run the script as root:
-    ```bash
     ./pbs_post_install_script_for_docker.sh
     ```
 
-4.  Clear your browser cache or perform a hard reload (**Ctrl+Shift+R** or **Cmd+Shift+R**) to see the changes in the web UI.
+4.  **Profit!**
+    * After the script finishes, clear your browser cache or perform a hard reload (**Ctrl+Shift+R** or **Cmd+Shift+R**) to see the nag message disappear.
 
 The script is **idempotent**, meaning it is safe to run multiple times. It checks its work and will skip any steps that have already been completed.
+
+---
 
 ## How It Works (Technical Details)
 
@@ -54,6 +64,8 @@ This script is designed to be safe and persistent:
     ...to...
     `if (... res.data.status.toLowerCase() == 'NoMoreNagging')`
 * **Persistence:** It creates an APT hook in `/etc/apt/apt.conf.d/no-nag-script`. This hook automatically re-applies the patch every time the `proxmox-widget-toolkit` package is updated, ensuring the fix survives system upgrades.
+
+---
 
 ## 💖 Support the Proxmox Developers
 

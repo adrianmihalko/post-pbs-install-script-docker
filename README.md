@@ -35,7 +35,6 @@ This script was created to provide a minimal, non-interactive alternative that s
 2.  **Download the script:**
     ```bash
     # (Inside the container)
-    # Note: Replace the URL with your actual GitHub repo URL
     wget [https://github.com/adrianmihalko/post-pbs-install-script-docker/raw/main/pbs_post_install_script_for_docker.sh](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME/raw/main/pbs_post_install_script_for_docker.sh)
     ```
 
